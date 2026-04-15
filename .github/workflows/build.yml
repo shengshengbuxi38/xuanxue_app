@@ -25,8 +25,8 @@ jobs:
 
       - name: Archive iOS build
         run: |
-          cd build/ios/archive/Runner.xcarchive
-          zip -r -9 "${GITHUB_WORKSPACE}/ios-build.zip" Products/Applications/Runner.app
+          cd build/ios/iphoneos
+          zip -r -9 "${GITHUB_WORKSPACE}/ios-build.zip" Runner.app
           echo "Archive created successfully"
 
       - name: Upload iOS artifact
