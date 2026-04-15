@@ -1,5 +1,6 @@
 pluginManagement {
-    // 本地中文路径修正（CI macOS 不需要）
+    // 本地中文路径修正（CI 环境由 Flutter 自动设置，不需要 local.properties）
+    var flutterSdkPath = "C:\\flutter_sdk" // 默认值（仅本地 Windows 使用）
     val localPropsFile = file("local.properties")
     if (localPropsFile.exists()) {
         val props = java.util.Properties()
@@ -9,8 +10,8 @@ pluginManagement {
             props.setProperty("flutter.sdk", "C:\\flutter_sdk")
             localPropsFile.outputStream().use { props.store(it, null) }
         }
+        flutterSdkPath = props.getProperty("flutter.sdk") ?: flutterSdkPath
     }
-    val flutterSdkPath = props.getProperty("flutter.sdk") ?: "C:\\flutter_sdk"
 
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 

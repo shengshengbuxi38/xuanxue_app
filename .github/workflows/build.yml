@@ -20,16 +20,20 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build iOS (no signing, for TestFlight)
-        run: flutter build ipa --release --no-codesign
-        env:
-          FLUTTER_BUILD_IPA: 1
+      - name: Build iOS (no signing)
+        run: flutter build ios --release --no-codesign
 
-      - name: Upload IPA artifact
+      - name: Archive iOS build
+        run: |
+          cd build/ios/archive/Runner.xcarchive
+          zip -r -9 "${GITHUB_WORKSPACE}/ios-build.zip" Products/Applications/Runner.app
+          echo "Archive created successfully"
+
+      - name: Upload iOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: iOS-IPA
-          path: build/ios/ipa/*.ipa
+          name: iOS-Build
+          path: ios-build.zip
           retention-days: 7
 
   build-android:
