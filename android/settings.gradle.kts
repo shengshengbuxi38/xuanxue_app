@@ -1,18 +1,16 @@
 pluginManagement {
-    // 修正 local.properties 中的中文路径，避免 Gradle 编码错误
+    // 本地中文路径修正（CI macOS 不需要）
     val localPropsFile = file("local.properties")
     if (localPropsFile.exists()) {
         val props = java.util.Properties()
         localPropsFile.inputStream().use { props.load(it) }
         val raw = props.getProperty("flutter.sdk", "")
-        // 检测是否包含非 ASCII 字符（中文路径）
         if (raw.any { it.code > 127 }) {
             props.setProperty("flutter.sdk", "C:\\flutter_sdk")
             localPropsFile.outputStream().use { props.store(it, null) }
         }
     }
-
-    val flutterSdkPath = "C:\\flutter_sdk"
+    val flutterSdkPath = props.getProperty("flutter.sdk") ?: "C:\\flutter_sdk"
 
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
