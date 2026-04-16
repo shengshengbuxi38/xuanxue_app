@@ -70,17 +70,16 @@ jobs:
       - name: Sign app
         run: |
           APP_PATH="build/ios/iphoneos/Runner.app"
-          # Get entitlements from provisioning profile using Python for reliable XML output
           PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
-          python3 -c "
-import plistlib, subprocess
-result = subprocess.run(['security', 'cms', '-D', '-i', '$PP_FILE'], capture_output=True)
-p = plistlib.loads(result.stdout)
-ent = p.get('Entitlements', {})
-plistlib.dump(ent, open('/tmp/entitlements.plist', 'wb'))
-print('Entitlements:', ent)
-"
+          python3 << 'PYEOF'
+          import plistlib, subprocess
+          result = subprocess.run(['security', 'cms', '-D', '-i', '$PP_FILE'], capture_output=True)
+          p = plistlib.loads(result.stdout)
+          ent = p.get('Entitlements', {})
+          plistlib.dump(ent, open('/tmp/entitlements.plist', 'wb'))
+          print('Entitlements:', ent)
+          PYEOF
 
           codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist \
             --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
