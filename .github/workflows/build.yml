@@ -73,8 +73,8 @@ jobs:
           # Get entitlements from provisioning profile
           PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
-          /usr/libexec/PlistBuddy -c "Print :Entitlements" /dev/stdin \
-            <<< "$(security cms -D -i "$PP_FILE")" > /tmp/entitlements.plist 2>/dev/null || true
+          security cms -D -i "$PP_FILE" > /tmp/profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements" /tmp/profile.plist > /tmp/entitlements.plist
 
           codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist \
             --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
