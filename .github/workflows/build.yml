@@ -53,9 +53,19 @@ jobs:
           cp $PP_PATH "$PP_DIR/$UUID.mobileprovision"
           echo "Installed profile: $UUID"
 
-      # Build signed IPA
-      - name: Build IPA
-        run: flutter build ipa --release
+      # Build unsigned archive, then sign and export IPA
+      - name: Build iOS archive (no signing)
+        run: flutter build ios --release --no-codesign
+
+      - name: Sign and export IPA
+        run: |
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace \
+            -scheme Runner \
+            -archivePath ../build/ios/archive/Runner.xcarchive \
+            -exportArchive \
+            -exportPath ../build/ios/ipa \
+            -exportOptionsPlist ExportOptions.plist
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
