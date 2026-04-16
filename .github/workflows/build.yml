@@ -53,19 +53,48 @@ jobs:
           cp $PP_PATH "$PP_DIR/$UUID.mobileprovision"
           echo "Installed profile: $UUID"
 
-      # Build unsigned archive, then sign and export IPA
-      - name: Build iOS archive (no signing)
+      # Build iOS (Flutter compile + Xcode build without signing)
+      - name: Build iOS
         run: flutter build ios --release --no-codesign
 
-      - name: Sign and export IPA
+      # Get certificate identity
+      - name: Get signing identity
         run: |
-          cd ios
-          xcodebuild -workspace Runner.xcworkspace \
-            -scheme Runner \
-            -archivePath ../build/ios/archive/Runner.xcarchive \
-            -exportArchive \
-            -exportPath ../build/ios/ipa \
-            -exportOptionsPlist ExportOptions.plist
+          security find-identity -v -p codesigning
+          # Use the Apple Distribution identity
+          IDENTITY=$(security find-identity -v -p codesigning | grep "Apple Distribution" | head -1 | awk -F'"' '{print $2}')
+          echo "IDENTITY=$IDENTITY" >> $GITHUB_ENV
+          echo "Using identity: $IDENTITY"
+
+      # Sign the .app
+      - name: Sign app
+        run: |
+          APP_PATH="build/ios/iphoneos/Runner.app"
+          # Get entitlements from provisioning profile
+          PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
+          /usr/libexec/PlistBuddy -c "Print :Entitlements" /dev/stdin \
+            <<< "$(security cms -D -i "$PP_FILE")" > /tmp/entitlements.plist 2>/dev/null || true
+
+          codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist \
+            --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
+          echo "App signed successfully"
+
+      # Package IPA manually
+      - name: Package IPA
+        run: |
+          mkdir -p build/ios/ipa/Payload
+          cp -R build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
+          cd build/ios/ipa
+          zip -r -9 ../Runner.ipa Payload
+          echo "IPA created: build/ios/Runner.ipa"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-IPA
+          path: build/ios/Runner.ipa
+          retention-days: 7
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
