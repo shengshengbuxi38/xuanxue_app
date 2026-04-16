@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Certificates and secrets (stored in GitHub Secrets)
+/certs/
+*.p8
+*.p12
+*.pem
+*.cer
+*.mobileprovision
+*.certSigningRequest
