@@ -67,20 +67,16 @@ jobs:
           echo "Using identity: $IDENTITY"
 
       # Extract entitlements and sign the .app
+      - name: Extract entitlements
+        run: |
+          PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
+          security cms -D -i "$PP_FILE" > /tmp/profile_decoded.plist
+          python3 -c "import plistlib; p=plistlib.load(open('/tmp/profile_decoded.plist','rb')); plistlib.dump(p.get('Entitlements',{}), open('/tmp/entitlements.plist','wb'))"
+
       - name: Sign app
         run: |
           APP_PATH="build/ios/iphoneos/Runner.app"
-          PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
-          python3 << 'PYEOF'
-          import plistlib, subprocess
-          result = subprocess.run(['security', 'cms', '-D', '-i', '$PP_FILE'], capture_output=True)
-          p = plistlib.loads(result.stdout)
-          ent = p.get('Entitlements', {})
-          plistlib.dump(ent, open('/tmp/entitlements.plist', 'wb'))
-          print('Entitlements:', ent)
-          PYEOF
-
           codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist \
             --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
           echo "App signed successfully"
