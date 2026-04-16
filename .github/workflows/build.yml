@@ -66,15 +66,21 @@ jobs:
           echo "IDENTITY=$IDENTITY" >> $GITHUB_ENV
           echo "Using identity: $IDENTITY"
 
-      # Sign the .app
+      # Extract entitlements and sign the .app
       - name: Sign app
         run: |
           APP_PATH="build/ios/iphoneos/Runner.app"
-          # Get entitlements from provisioning profile
+          # Get entitlements from provisioning profile using Python for reliable XML output
           PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
-          security cms -D -i "$PP_FILE" > /tmp/profile.plist
-          /usr/libexec/PlistBuddy -c "Print :Entitlements" /tmp/profile.plist > /tmp/entitlements.plist
+          python3 -c "
+import plistlib, subprocess
+result = subprocess.run(['security', 'cms', '-D', '-i', '$PP_FILE'], capture_output=True)
+p = plistlib.loads(result.stdout)
+ent = p.get('Entitlements', {})
+plistlib.dump(ent, open('/tmp/entitlements.plist', 'wb'))
+print('Entitlements:', ent)
+"
 
           codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist \
             --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
