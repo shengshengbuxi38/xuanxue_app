@@ -80,10 +80,14 @@ jobs:
           security cms -D -i "$PP_FILE" > /tmp/profile_decoded.plist
           python3 -c "import plistlib; p=plistlib.load(open('/tmp/profile_decoded.plist','rb')); plistlib.dump(p.get('Entitlements',{}), open('/tmp/entitlements.plist','wb'))"
 
-          # 3. Sign the app (with embedded profile and entitlements)
+          # 3. Sign all frameworks and plugins first, then the main app
+          find "$APP_PATH/Frameworks" -name "*.framework" -exec codesign --force --sign "$IDENTITY" --keychain $RUNNER_TEMP/app-signing.keychain-db {} \;
+          find "$APP_PATH/Frameworks" -name "*.dylib" -exec codesign --force --sign "$IDENTITY" --keychain $RUNNER_TEMP/app-signing.keychain-db {} \;
           codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist \
             --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
           echo "App signed successfully"
+          codesign --verify --deep --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
+          echo "Signature verified"
 
           # 4. Package IPA
           mkdir -p build/ios/ipa/Payload
