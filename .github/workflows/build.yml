@@ -66,30 +66,28 @@ jobs:
           echo "IDENTITY=$IDENTITY" >> $GITHUB_ENV
           echo "Using identity: $IDENTITY"
 
-      # Extract entitlements and sign the .app
-      - name: Extract entitlements
+      # Extract entitlements, embed profile, sign, and package IPA
+      - name: Sign, embed profile, and package IPA
         run: |
+          APP_PATH="build/ios/iphoneos/Runner.app"
           PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
+
+          # 1. Embed provisioning profile into the app bundle BEFORE signing
+          cp "$PP_FILE" "$APP_PATH/embedded.mobileprovision"
+
+          # 2. Extract entitlements from provisioning profile
           security cms -D -i "$PP_FILE" > /tmp/profile_decoded.plist
           python3 -c "import plistlib; p=plistlib.load(open('/tmp/profile_decoded.plist','rb')); plistlib.dump(p.get('Entitlements',{}), open('/tmp/entitlements.plist','wb'))"
 
-      - name: Sign app
-        run: |
-          APP_PATH="build/ios/iphoneos/Runner.app"
+          # 3. Sign the app (with embedded profile and entitlements)
           codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist \
             --keychain $RUNNER_TEMP/app-signing.keychain-db "$APP_PATH"
           echo "App signed successfully"
 
-      # Package IPA manually
-      - name: Package IPA
-        run: |
+          # 4. Package IPA
           mkdir -p build/ios/ipa/Payload
-          cp -R build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
-          # Embed provisioning profile into the app bundle
-          PP_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          PP_FILE=$(ls "$PP_DIR/"*.mobileprovision | head -1)
-          cp "$PP_FILE" build/ios/ipa/Payload/Runner.app/embedded.mobileprovision
+          cp -R "$APP_PATH" build/ios/ipa/Payload/
           cd build/ios/ipa
           zip -r -9 ../Runner.ipa Payload
           echo "IPA created: build/ios/Runner.ipa"
