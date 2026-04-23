@@ -1,5 +1,5 @@
 class ApiEndpoints {
-  static const String baseUrl = 'http://localhost:8000';
+  static const String baseUrl = 'https://xuanxue-api.onrender.com';
 
   // Auth
   static const String register = '/api/auth/register';
