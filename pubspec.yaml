@@ -1,7 +1,7 @@
 name: flutter_app
 description: "玄学命理"
 publish_to: 'none'
-version: 1.0.0+4
+version: 1.0.0+6
 
 environment:
   sdk: ^3.11.4

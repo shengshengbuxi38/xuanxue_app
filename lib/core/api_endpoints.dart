@@ -1,5 +1,5 @@
 class ApiEndpoints {
-  static const String baseUrl = 'https://32a8a507.r7.cpolar.top';
+  static const String baseUrl = 'https://xuanxue-api-production.up.railway.app';
 
   // Auth
   static const String register = '/api/auth/register';
