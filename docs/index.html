@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>了凡立命学 - 隐私政策</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -9,83 +10,129 @@
   h1 { font-size: 32px; text-align: center; color: #1a1a2e; margin-bottom: 8px; }
   .date { text-align: center; color: #999; font-size: 16px; margin-bottom: 40px; }
   h2 { font-size: 22px; color: #1a1a2e; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 2px solid #f0e6d0; }
+  h3 { font-size: 18px; color: #333; margin: 20px 0 12px; }
   p { font-size: 17px; margin-bottom: 16px; }
-  ul { padding-left: 24px; margin-bottom: 16px; }
+  ul, ol { padding-left: 24px; margin-bottom: 16px; }
   li { font-size: 17px; margin-bottom: 8px; }
   .highlight { background: #fef9ef; padding: 20px; border-radius: 12px; border-left: 4px solid #d4a853; margin: 16px 0; }
+  .warn { background: #fff5f5; padding: 20px; border-radius: 12px; border-left: 4px solid #e74c3c; margin: 16px 0; }
   table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-  th, td { padding: 12px 16px; border: 1px solid #e0e0e0; font-size: 16px; text-align: left; }
+  th, td { padding: 12px 16px; border: 1px solid #e0e0e0; font-size: 16px; text-align: left; vertical-align: top; }
   th { background: #f5f0e8; font-weight: 600; color: #1a1a2e; }
   .footer { text-align: center; color: #999; font-size: 14px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
 </style>
 </head>
 <body>
   <h1>了凡立命学 隐私政策</h1>
-  <div class="date">最后更新：2026年4月18日</div>
+  <div class="date">最后更新：2026年5月7日</div>
 
-  <p>「了凡立命学」是一款中国传统命理文化学习与分析工具。我们非常重视您的隐私保护。本隐私政策说明了我们如何收集、使用和保护您的个人信息。</p>
+  <p>「了凡立命学」是一款中国传统命理文化学习与分析工具。您可以无需注册直接使用排盘计算和知识库浏览功能。如需保存档案，则需要注册账号。我们非常重视您的隐私保护，本隐私政策详细说明了我们如何收集、使用、存储和分享您的个人信息。</p>
 
   <h2>一、我们收集的信息</h2>
-  <p>在使用「了凡立命学」的过程中，我们会收集以下信息：</p>
+
+  <h3>1.1 注册用户的信息（仅注册后收集）</h3>
   <table>
-    <tr><th>信息类型</th><th>用途</th><th>是否必须</th></tr>
-    <tr><td>账号信息（用户名、密码）</td><td>创建账户、身份验证</td><td>是</td></tr>
-    <tr><td>出生日期、时辰</td><td>八字排盘计算</td><td>是</td></tr>
-    <tr><td>性别、出生地点</td><td>命理分析参考</td><td>是</td></tr>
-    <tr><td>命理分析记录</td><td>提供历史查询功能</td><td>自动保存</td></tr>
-    <tr><td>AI 分析请求</td><td>调用 AI 生成分析结果</td><td>用户主动触发</td></tr>
-    <tr><td>反馈内容</td><td>改进产品和服务</td><td>用户主动提交</td></tr>
+    <tr><th>数据类型</th><th>是否与您关联</th><th>收集目的</th></tr>
+    <tr><td>用户名</td><td>是</td><td>账户识别和身份验证</td></tr>
+    <tr><td>密码（经 PBKDF2 加密哈希处理）</td><td>是</td><td>账户安全验证</td></tr>
+    <tr><td>用户反馈内容</td><td>是</td><td>改进产品和服务</td></tr>
+    <tr><td>排盘档案记录（姓名、出生日期时辰、性别）</td><td>是</td><td>提供档案保存和历史查询功能</td></tr>
+    <tr><td>AI 分析结果</td><td>是</td><td>保存分析历史记录</td></tr>
   </table>
 
-  <h2>二、我们如何使用信息</h2>
-  <ul>
-    <li><strong>提供核心功能：</strong>根据您输入的出生信息进行八字排盘、大运流年计算和命理分析。</li>
-    <li><strong>AI 分析服务：</strong>将您的命理信息发送至 AI 接口，获取个性化分析结果。</li>
-    <li><strong>档案管理：</strong>保存您的排盘记录和分析结果，方便随时查看。</li>
-    <li><strong>产品改进：</strong>根据反馈信息优化应用体验和功能。</li>
-  </ul>
+  <h3>1.2 所有用户（含游客）的信息</h3>
+  <table>
+    <tr><th>数据类型</th><th>是否与您关联</th><th>收集目的</th></tr>
+    <tr><td>出生日期、出生时辰（年月日时分）</td><td>是</td><td>八字排盘计算</td></tr>
+    <tr><td>性别</td><td>是</td><td>排盘计算参数</td></tr>
+    <tr><td>用户主动输入的姓名</td><td>是</td><td>排盘结果标识（仅本地显示）</td></tr>
+    <tr><td>起卦数字和问题</td><td>是</td><td>数字起卦功能</td></tr>
+    <tr><td>知识库提问内容</td><td>是</td><td>知识问答功能</td></tr>
+  </table>
 
-  <h2>三、信息的存储与安全</h2>
+  <h3>1.3 我们不收集的信息</h3>
   <div class="highlight">
-    <strong>数据存储：</strong>您的所有数据存储在加密的服务器数据库中，采用行业标准的安全措施保护。
+    <strong>重要声明：</strong>本应用不收集以下类型的数据：
   </div>
   <ul>
-    <li>密码使用加密存储，我们无法查看您的原始密码。</li>
-    <li>身份验证使用 JWT 令牌，令牌有效期为 7 天，过期需重新登录。</li>
-    <li>数据传输使用 HTTPS 加密协议。</li>
-    <li>我们不将您的个人信息出售或分享给任何第三方。</li>
+    <li>不收集精确地理位置（不请求定位权限）</li>
+    <li>不使用 Cookie 或其他追踪技术</li>
+    <li>不集成任何广告 SDK 或第三方追踪工具</li>
+    <li>不收集设备识别符（IDFA/IDFV）</li>
+    <li>不收集通讯录、照片、相机等设备数据</li>
+    <li>不收集健康、财务等敏感个人数据</li>
   </ul>
 
-  <h2>四、第三方服务</h2>
-  <p>本应用使用以下第三方服务：</p>
+  <h2>二、我们如何使用收集的信息</h2>
   <ul>
-    <li><strong>AI 分析接口：</strong>命理分析功能通过第三方 AI 服务实现，您的排盘信息会发送至 AI 服务进行处理。AI 服务提供商有自己的隐私政策。</li>
-    <li><strong>地理位置服务：</strong>出生地点信息仅用于计算真太阳时，不会持续追踪您的位置。</li>
+    <li><strong>排盘计算：</strong>根据您输入的出生日期时辰进行传统八字排盘计算。</li>
+    <li><strong>AI 命理分析：</strong>将排盘计算结果发送至 AI 服务，获取命理分析报告。</li>
+    <li><strong>档案管理（注册用户）：</strong>保存您的排盘记录和分析结果。</li>
+    <li><strong>产品改进：</strong>根据反馈信息优化应用体验。</li>
   </ul>
 
-  <h2>五、数据删除</h2>
-  <p>您可以随时通过以下方式管理您的数据：</p>
+  <h2>三、信息的分享与第三方服务</h2>
+
+  <h3>3.1 AI 分析服务 — 智谱AI</h3>
+  <div class="warn">
+    <strong>重要：</strong>当您使用 AI 命理分析功能（深度分析、命理分析、大运流年、八字匹配、数字起卦、知识问答）时，您的排盘计算结果（出生日期时辰、性别等信息）将被发送至以下第三方 AI 服务：
+  </div>
   <ul>
-    <li>在「我的」页面删除已保存的排盘记录和 AI 分析结果。</li>
-    <li>联系开发者（qinj2017@gmail.com）请求删除账户及所有关联数据。</li>
+    <li><strong>服务提供商：</strong>北京智谱华章科技有限公司（zhipuai.cn）</li>
+    <li><strong>共享的数据内容：</strong>出生日期、出生时辰、性别、排盘计算结果文本</li>
+    <li><strong>共享目的：</strong>调用智谱AI大语言模型生成命理分析文本</li>
+    <li><strong>智谱AI隐私政策：</strong>https://open.bigmodel.cn/pricing/policy</li>
+  </ul>
+  <p><strong>请注意：</strong>智谱AI 可能会使用发送至其服务的数据来改进其 AI 模型。如您不希望数据被用于模型训练，请勿使用 AI 分析功能。</p>
+
+  <h3>3.2 我们不会向以下方分享您的信息</h3>
+  <ul>
+    <li>不出售、出租或交易您的个人信息给任何第三方</li>
+    <li>不与广告商、数据经纪商分享您的信息</li>
+    <li>不将您的信息用于营销目的</li>
   </ul>
 
-  <h2>六、儿童隐私</h2>
-  <p>「了凡立命学」不面向 13 岁以下儿童。我们不会有意收集儿童的个人信息。</p>
+  <h2>四、数据存储与安全</h2>
+  <table>
+    <tr><th>项目</th><th>说明</th></tr>
+    <tr><td>托管平台</td><td>Railway（美国）</td></tr>
+    <tr><td>数据库</td><td>SQLite（服务器端）</td></tr>
+    <tr><td>传输加密</td><td>HTTPS/TLS</td></tr>
+    <tr><td>密码存储</td><td>PBKDF2-SHA256（100,000 次迭代）加密哈希，不可逆</td></tr>
+    <tr><td>身份认证</td><td>JWT 令牌，有效期 7 天</td></tr>
+    <tr><td>本地存储</td><td>仅存储 JWT 令牌（SharedPreferences），不存储其他用户数据</td></tr>
+  </table>
+
+  <h2>五、数据保留与删除</h2>
+  <ul>
+    <li><strong>注册用户数据：</strong>在您的账户存续期间保留。账户注销后 30 天内删除所有关联数据。</li>
+    <li><strong>游客数据：</strong>本应用不在服务器端保存游客的排盘数据。游客的排盘输入仅用于即时计算，不会被存储。</li>
+    <li><strong>您可以通过以下方式管理数据：</strong>
+      <ul>
+        <li>在应用内「历史记录」页面删除已保存的 AI 分析结果</li>
+        <li>在应用内「档案库」页面删除已保存的排盘档案</li>
+        <li>发送邮件至 qinj2017@gmail.com 请求注销账户并删除所有数据</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>六、儿童隐私保护</h2>
+  <p>「了凡立命学」不面向 13 岁以下儿童。我们不会有意收集 13 岁以下儿童的个人信息。如果我们发现无意中收集了儿童信息，将立即删除。</p>
 
   <h2>七、隐私政策更新</h2>
-  <p>我们可能会不时更新本隐私政策。更新后会在应用内通知您。建议您定期查看本页面以了解最新的隐私保护措施。</p>
+  <p>我们可能会不时更新本隐私政策。重大变更将通过应用内通知或邮件方式告知您。建议您定期查看本页面以了解最新的隐私保护措施。</p>
 
   <h2>八、联系我们</h2>
-  <p>如果您对本隐私政策有任何疑问或建议，请通过以下方式联系我们：</p>
+  <p>如果您对本隐私政策有任何疑问、建议或数据删除请求，请通过以下方式联系我们：</p>
   <ul>
-    <li>电子邮件：qinj2017@gmail.com</li>
-    <li>应用名称：了凡立命学</li>
-    <li>开发者：John Qin</li>
+    <li><strong>电子邮件：</strong>qinj2017@gmail.com</li>
+    <li><strong>应用名称：</strong>了凡立命学</li>
+    <li><strong>开发者：</strong>John Qin</li>
   </ul>
+  <p>我们将在收到您的请求后 30 个工作日内予以回复。</p>
 
   <div class="footer">
-    © 2026 了凡立命学 · 保留所有权利
+    &copy; 2026 了凡立命学 &middot; 保留所有权利
   </div>
 </body>
 </html>
