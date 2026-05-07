@@ -21,10 +21,13 @@ final routerProvider = Provider<GoRouter>((ref) {
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/bazi',
     redirect: (context, state) {
-      final loggedIn = auth.valueOrNull != null;
+      final isActive = auth != null;
       final isAuth = state.matchedLocation == '/auth';
-      if (!loggedIn && !isAuth) return '/auth';
-      if (loggedIn && isAuth) return '/bazi';
+      final needsAuth = state.matchedLocation.startsWith('/archive') ||
+          state.matchedLocation.startsWith('/history') ||
+          state.matchedLocation.startsWith('/feedback');
+      if (needsAuth && !isActive) return '/auth';
+      if (isActive && isAuth) return '/bazi';
       return null;
     },
     routes: [
@@ -46,12 +49,12 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-class ScaffoldWithNav extends StatelessWidget {
+class ScaffoldWithNav extends ConsumerWidget {
   final Widget child;
   const ScaffoldWithNav({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
@@ -63,7 +66,7 @@ class ScaffoldWithNav extends StatelessWidget {
           NavigationDestination(icon: Icon(Icons.person), label: '我的'),
         ],
         selectedIndex: _selectedIndex(context),
-        onDestinationSelected: (i) => _onTap(context, i),
+        onDestinationSelected: (i) => _onTap(context, ref, i),
       ),
     );
   }
@@ -77,17 +80,19 @@ class ScaffoldWithNav extends StatelessWidget {
     return 4;
   }
 
-  void _onTap(BuildContext context, int index) {
+  void _onTap(BuildContext context, WidgetRef ref, int index) {
     switch (index) {
       case 0: context.go('/bazi');
       case 1: context.go('/dayun');
       case 2: context.go('/advanced');
       case 3: context.go('/archive');
-      case 4: _showMyMenu(context);
+      case 4: _showMyMenu(context, ref); break;
     }
   }
 
-  void _showMyMenu(BuildContext context) {
+  void _showMyMenu(BuildContext context, WidgetRef ref) {
+    final auth = ref.read(authProvider);
+    final isGuest = auth == 'guest';
     showModalBottomSheet(
       context: context,
       builder: (ctx) => SafeArea(
@@ -99,8 +104,12 @@ class ScaffoldWithNav extends StatelessWidget {
             ListTile(leading: const Icon(Icons.feedback), title: const Text('用户反馈'), onTap: () { Navigator.pop(ctx); context.go('/feedback'); }),
             ListTile(leading: const Icon(Icons.info), title: const Text('缘起'), onTap: () { Navigator.pop(ctx); context.go('/about'); }),
             const Divider(),
-            ListTile(leading: const Icon(Icons.logout, color: Colors.red), title: const Text('退出登录', style: TextStyle(color: Colors.red)),
-              onTap: () { Navigator.pop(ctx); context.go('/auth'); }),
+            if (isGuest)
+              ListTile(leading: const Icon(Icons.login, color: Colors.blue), title: const Text('注册 / 登录', style: TextStyle(color: Colors.blue)),
+                onTap: () { Navigator.pop(ctx); context.go('/auth'); })
+            else
+              ListTile(leading: const Icon(Icons.logout, color: Colors.red), title: const Text('退出登录', style: TextStyle(color: Colors.red)),
+                onTap: () { Navigator.pop(ctx); context.go('/auth'); }),
           ],
         ),
       ),

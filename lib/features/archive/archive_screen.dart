@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/api_client.dart';
 import '../../core/api_endpoints.dart';
 import '../../core/models.dart';
+import '../../shared/providers/auth_provider.dart';
 
 class ArchiveScreen extends ConsumerStatefulWidget {
   const ArchiveScreen({super.key});
@@ -38,6 +40,30 @@ class _ArchiveScreenState extends ConsumerState<ArchiveScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = ref.watch(authProvider);
+    if (auth == null || auth == 'guest') {
+      return Scaffold(
+        appBar: AppBar(title: const Text('八字档案库')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.lock_outline, size: 48, color: Colors.grey),
+                const SizedBox(height: 16),
+                const Text('档案管理需要登录后使用', style: TextStyle(fontSize: 16)),
+                const SizedBox(height: 24),
+                FilledButton(
+                  onPressed: () => context.go('/auth'),
+                  child: const Text('去登录'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: const Text('八字档案库')),
       body: _loading

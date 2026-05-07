@@ -92,6 +92,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   onPressed: () => setState(() { _isRegister = !_isRegister; _error = null; }),
                   child: Text(_isRegister ? '已有账号？去登录' : '没有账号？去注册'),
                 ),
+                const SizedBox(height: 16),
+                OutlinedButton(
+                  onPressed: () {
+                    ref.read(authProvider.notifier).enterAsGuest();
+                  },
+                  child: const Text('游客体验（无需注册）'),
+                ),
               ],
             ),
           ),

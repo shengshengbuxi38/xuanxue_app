@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/api_client.dart';
 import '../../core/api_endpoints.dart';
 import '../../core/models.dart';
+import '../../shared/providers/auth_provider.dart';
 
 class HistoryScreen extends ConsumerStatefulWidget {
   const HistoryScreen({super.key});
@@ -37,6 +39,30 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = ref.watch(authProvider);
+    if (auth == null || auth == 'guest') {
+      return Scaffold(
+        appBar: AppBar(title: const Text('历史记录')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.lock_outline, size: 48, color: Colors.grey),
+                const SizedBox(height: 16),
+                const Text('历史记录需要登录后查看', style: TextStyle(fontSize: 16)),
+                const SizedBox(height: 24),
+                FilledButton(
+                  onPressed: () => context.go('/auth'),
+                  child: const Text('去登录'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: const Text('历史记录')),
       body: Column(children: [

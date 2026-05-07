@@ -3,59 +3,62 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/api_client.dart';
 import '../../core/api_endpoints.dart';
 
-final authProvider = StateNotifierProvider<AuthNotifier, AsyncValue<String?>>((ref) {
+final authProvider = StateNotifierProvider<AuthNotifier, String?>((ref) {
   return AuthNotifier();
 });
 
-class AuthNotifier extends StateNotifier<AsyncValue<String?>> {
+class AuthNotifier extends StateNotifier<String?> {
   final ApiClient _api = ApiClient();
 
-  AuthNotifier() : super(const AsyncValue.data(null)) {
+  AuthNotifier() : super(null) {
     _loadToken();
   }
 
   Future<void> _loadToken() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
-    state = AsyncValue.data(token);
+    if (token != null) {
+      state = token;
+    }
+  }
+
+  void enterAsGuest() {
+    state = 'guest';
   }
 
   Future<bool> login(String username, String password) async {
-    state = const AsyncValue.loading();
     try {
       final res = await _api.post(ApiEndpoints.login, data: {
         'username': username, 'password': password,
       });
       final token = res.data['access_token'] as String;
       await _api.saveToken(token);
-      state = AsyncValue.data(token);
+      state = token;
       return true;
     } catch (e) {
-      state = const AsyncValue.data(null);
       return false;
     }
   }
 
   Future<bool> register(String username, String password) async {
-    state = const AsyncValue.loading();
     try {
       final res = await _api.post(ApiEndpoints.register, data: {
         'username': username, 'password': password,
       });
       final token = res.data['access_token'] as String;
       await _api.saveToken(token);
-      state = AsyncValue.data(token);
+      state = token;
       return true;
     } catch (e) {
-      state = const AsyncValue.data(null);
       return false;
     }
   }
 
   Future<void> logout() async {
     await _api.logout();
-    state = const AsyncValue.data(null);
+    state = null;
   }
 
-  bool get isLoggedIn => state.valueOrNull != null;
+  bool get isLoggedIn => state != null && state != 'guest';
+  bool get isGuest => state == 'guest';
 }
